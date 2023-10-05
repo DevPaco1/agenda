@@ -1,12 +1,12 @@
-from rest_framework import viewsets, response, decorators
+from rest_framework import viewsets, response
 from . import models, serializers
-
+from rest_framework.response import Response
 
 class UserViewSet(viewsets.ViewSet):
     """User sign up"""
 
-    authentication_classes = []
-    permission_classes = []
+   # authentication_classes = []
+   # permission_classes = []
     serializer_class = serializers.UserModelSerializer
 
     def create(self, request):
@@ -17,7 +17,11 @@ class UserViewSet(viewsets.ViewSet):
         return response.Response(
             {"detail": f"user {user.username} created"}, status=201
         )
-    
+    def list(self, request):
+        queryset = models.User.objects.all()
+        serializer_class = serializers.UserModelSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+
 class ContactViewSet(viewsets.ModelViewSet):
     """Contact viewset"""
 
